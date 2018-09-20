@@ -1,0 +1,25 @@
+{
+    "name": "yomy/datastructures",
+    "description": "Data structures",
+    "type": "library",
+    "keywords": ["datastructures","collection","ddd"],
+    "homepage": "https://github.com/yomy/datastructures",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Milos Jovanovic",
+            "email": "email.yomy@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6"
+    },
+    "autoload": {
+        "psr-4": {
+            "YomY\\DataStructures\\": "src"
+        }
+    }
+}
