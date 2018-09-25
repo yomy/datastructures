@@ -33,6 +33,12 @@ interface CollectionInterface extends \Traversable, \Countable {
     public function addArray(array $objects);
 
     /**
+     * @param mixed $object
+     * @return mixed
+     */
+    public function remove($object);
+
+    /**
      * @return array
      */
     public function getAll(): array;

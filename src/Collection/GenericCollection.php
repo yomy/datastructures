@@ -47,6 +47,18 @@ class GenericCollection implements \IteratorAggregate, CollectionInterface {
     }
 
     /**
+     * @param mixed $objectToRemove
+     * @return void
+     */
+    public function remove($objectToRemove) {
+        foreach ($this->objects as $key => $object) {
+            if ($object === $objectToRemove) {
+                unset($this->objects[$key]);
+            }
+        }
+    }
+
+    /**
      * @param array $objects
      */
     public function addArray(array $objects) {

@@ -57,6 +57,22 @@ class GenericCollectionTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
+     * Provides values for testing removal functionality
+     *
+     * @return array
+     */
+    public static function RemoveValueProvider(): array {
+        return [
+            [[1, 2, 3], 2, [1, 3]],
+            [[2, 1, 2, 2, 3, 2, 4, 5, 2], 2, [1, 3, 4, 5]],
+            [[], 2, []],
+            [[2], 2, []],
+            [[2, 2], 2, []],
+            [[1, 3], 2, [1, 3]]
+        ];
+    }
+
+    /**
      * Test creation of the collection giving one item at a time
      *
      * @dataProvider ValueProvider
@@ -207,6 +223,21 @@ class GenericCollectionTest extends \PHPUnit\Framework\TestCase {
         foreach ($inputArray as $item) {
             self::assertFalse($collection->contains($item));
         }
+    }
+
+    /**
+     * Tests removing items
+     *
+     * @dataProvider RemoveValueProvider
+     * @param array $inputArray
+     * @param mixed $remove
+     * @param array $expectedArray
+     */
+    public function testRemove($inputArray, $remove, $expectedArray) {
+        $collection = new GenericCollection();
+        $collection->addArray($inputArray);
+        $collection->remove($remove);
+        self::assertEquals($expectedArray, array_values($collection->getAll()));
     }
 
     /**
