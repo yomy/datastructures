@@ -190,38 +190,38 @@ $failed = $objectCollection->tryAddArray($objects);
 //the $failed array will contain objects that were not added to collection
 ```
 
-## Examples of PairCollection usage
+## Examples of KeyValueCollection usage
 
-PairCollection is a collection that is intended to contain Key=>Value pairs. 
+KeyValueCollection is a collection that is intended to contain Key=>Value pairs. 
 Internally, this collection holds objects of Pair type, but the intention is not to
 use these Pair objects directly, but trough setting a key and value directly on a collection object.
  ```php
- $pairCollection = new PairCollection();
+ $keyValueCollection = new KeyValueCollection();
  ```
-A PairCollection should be used via put() and get() methods.
+A KeyValueCollection should be used via put() and get() methods.
 ```php
-$pairCollection->put('key', 'value');
-$value = $pairCollection->get('key');
+$keyValueCollection->put('key', 'value');
+$value = $keyValueCollection->get('key');
 //$value will contain the string 'value'
 ```
 
-PairCollection has unique keys. This means that putting something on a key that already exists will
+KeyValueCollection has unique keys. This means that putting something on a key that already exists will
 owerwrite the value in the collection
 ```php
-$pairCollection->put('key', 'value');
-$pairCollection->put('key', 'newValue');
-$value = $pairCollection->get('key');
+$keyValueCollection->put('key', 'value');
+$keyValueCollection->put('key', 'newValue');
+$value = $keyValueCollection->get('key');
 //$value will contain the string 'newValue'
 ```
 
 Now, you might think that this is simply emulating an associative array, so why would you use this instead?
 
-The power of PairCollection is that it can hold objects as keys, so you can have:
+The power of KeyValueCollection is that it can hold objects as keys, so you can have:
 ```php
 class UserId {...} //A Value Object class
 class User {...} //A user details object class
 
-class UserCollection extends PairCollection {
+class UserCollection extends KeyValueCollection {
     public function __construct() {
         parent::__construct(UserId::class, User::class);
     }

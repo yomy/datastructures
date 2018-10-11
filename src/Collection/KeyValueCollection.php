@@ -23,7 +23,7 @@ use YomY\DataStructures\Pair\Pair;
  * @method Pair getFirst()
  * @method Pair getLast()
  */
-class PairCollection extends ObjectCollection {
+class KeyValueCollection extends ObjectCollection {
 
     /**
      * @var string|null
@@ -36,7 +36,7 @@ class PairCollection extends ObjectCollection {
     private $valueClass;
 
     /**
-     * PairCollection constructor.
+     * KeyValueCollection constructor.
      *
      * @param string|null $keyClass
      * @param string|null $valueClass

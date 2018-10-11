@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace YomY\DataStructures\Tests\Collection;
 
-use YomY\DataStructures\Collection\PairCollection;
+use YomY\DataStructures\Collection\KeyValueCollection;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleObject1;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleObject2;
 
@@ -25,7 +25,7 @@ require_once 'Helper/ExampleObject2.php';
 /**
  * @package YomY\DataStructures\Tests\Collection
  */
-class PairCollectionTest extends \PHPUnit\Framework\TestCase {
+class KeyValueCollectionTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * Provides pairs for collection
@@ -74,10 +74,10 @@ class PairCollectionTest extends \PHPUnit\Framework\TestCase {
      * Helper method for building a collection from array
      *
      * @param array $inputPairs
-     * @return PairCollection
+     * @return KeyValueCollection
      */
-    private function buildCollection(array $inputPairs): PairCollection {
-        $collection = new PairCollection();
+    private function buildCollection(array $inputPairs): KeyValueCollection {
+        $collection = new KeyValueCollection();
         foreach ($inputPairs as $inputPair) {
             $collection->put($inputPair[0], $inputPair[1]);
         }
@@ -87,7 +87,7 @@ class PairCollectionTest extends \PHPUnit\Framework\TestCase {
     /**
      * Helper method to extract pair array from collection
      *
-     * @param PairCollection $collection
+     * @param KeyValueCollection $collection
      * @return array
      */
     private function extractPairsToArray($collection): array {
@@ -129,7 +129,7 @@ class PairCollectionTest extends \PHPUnit\Framework\TestCase {
      * Test overwriting a value in the collection
      */
     public function testOverwrite() {
-        $collection = new PairCollection();
+        $collection = new KeyValueCollection();
         $collection->put(1, 1);
         $collection->put(1, 2);
         $value = $collection->get(1);
@@ -154,7 +154,7 @@ class PairCollectionTest extends \PHPUnit\Framework\TestCase {
      * Test removing an item by key
      */
     public function testRemove() {
-        $collection = new PairCollection();
+        $collection = new KeyValueCollection();
         $collection->put(1, 1);
         $collection->removeByKey(1);
         self::assertTrue($collection->isEmpty());
@@ -180,7 +180,7 @@ class PairCollectionTest extends \PHPUnit\Framework\TestCase {
      * Test put, when key is restricted to specific class
      */
     public function testNamedKeyPut() {
-        $collection = new PairCollection(ExampleObject1::class);
+        $collection = new KeyValueCollection(ExampleObject1::class);
         $object = new ExampleObject1();
         $collection->put($object, 1);
         $result = $collection->get($object);
@@ -192,7 +192,7 @@ class PairCollectionTest extends \PHPUnit\Framework\TestCase {
      * @expectedException \InvalidArgumentException
      */
     public function testNamedKeyPutFailWrongType() {
-        $collection = new PairCollection(ExampleObject1::class);
+        $collection = new KeyValueCollection(ExampleObject1::class);
         $object = new ExampleObject2();
         $collection->put($object, 1);
     }
@@ -201,7 +201,7 @@ class PairCollectionTest extends \PHPUnit\Framework\TestCase {
      * Test put, when value is restricted to specific class
      */
     public function testNamedValuePut() {
-        $collection = new PairCollection(null, ExampleObject1::class);
+        $collection = new KeyValueCollection(null, ExampleObject1::class);
         $object = new ExampleObject1();
         $collection->put(1, $object);
         $result = $collection->get(1);
@@ -213,7 +213,7 @@ class PairCollectionTest extends \PHPUnit\Framework\TestCase {
      * @expectedException \InvalidArgumentException
      */
     public function testNamedValuePutFailWrongType() {
-        $collection = new PairCollection(ExampleObject1::class);
+        $collection = new KeyValueCollection(ExampleObject1::class);
         $object = new ExampleObject2();
         $collection->put(1, $object);
     }
