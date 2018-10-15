@@ -61,13 +61,6 @@ foreach ($collection as $object) {
 }
 ```
 
-Collection supports getting first and last objects added.
-Note that these methods will throw UnderflowException if the collection is empty
-```php
-$first = $collection->getFirst();
-$last = $collection->getLast();
-```
-
 Count the number of objects in a collection
 ```php
 $count = $collection->count();
@@ -118,12 +111,6 @@ $filtered = $collection->filter(function($object) {
 
 ObjectCollection is an extension of GenericCollection that is intended
 to contain only objects of specific class.
-
-In examples below assume we have the following
-```php
-class Object1 {}
-class Object2 {}
-``` 
 
 Creating an ObjectCollection of specific type
 ```php

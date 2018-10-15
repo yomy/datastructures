@@ -75,26 +75,6 @@ class GenericCollection implements \IteratorAggregate, CollectionInterface {
     }
 
     /**
-     * @return mixed
-     */
-    public function getFirst() {
-        if ($this->isEmpty()) {
-            throw new \UnderflowException('Collection is empty');
-        }
-        return reset($this->objects);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLast() {
-        if ($this->isEmpty()) {
-            throw new \UnderflowException('Collection is empty');
-        }
-        return end($this->objects);
-    }
-
-    /**
      * @return \Generator|\Traversable
      */
     public function getIterator() {

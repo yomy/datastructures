@@ -44,16 +44,6 @@ interface CollectionInterface extends \Traversable, \Countable {
     public function getAll(): array;
 
     /**
-     * @return mixed
-     */
-    public function getFirst();
-
-    /**
-     * @return mixed
-     */
-    public function getLast();
-
-    /**
      * @return void
      */
     public function clear();

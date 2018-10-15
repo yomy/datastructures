@@ -20,8 +20,6 @@ use YomY\DataStructures\Collection\ObjectCollection;
 /**
  * @package YomY\DataStructures\Tests\Collection\Helper
  * @method ExampleObject1[] getAll()
- * @method ExampleObject1 getFirst()
- * @method ExampleObject1 getLast()
  */
 class ExampleObject1Collection extends ObjectCollection {
 

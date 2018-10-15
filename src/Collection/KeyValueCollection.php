@@ -20,8 +20,6 @@ use YomY\DataStructures\Pair\Pair;
 /**
  * @package YomY\DataStructures\Collection
  * @method Pair[] getAll()
- * @method Pair getFirst()
- * @method Pair getLast()
  */
 class KeyValueCollection extends ObjectCollection {
 

@@ -132,46 +132,6 @@ class GenericCollectionTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * Test getting first item of the collection
-     */
-    public function testGetFirst() {
-        $collection = new GenericCollection();
-        $collection->add(1);
-        $collection->add(2);
-        self::assertEquals(1, $collection->getFirst());
-    }
-
-    /**
-     * Test getting last item of the collection
-     */
-    public function testGetLast() {
-        $collection = new GenericCollection();
-        $collection->add(1);
-        $collection->add(2);
-        self::assertEquals(2, $collection->getLast());
-    }
-
-    /**
-     * Test getting first item when collection is empty
-     *
-     * @expectedException \UnderflowException
-     */
-    public function testGetFirstFromEmpty() {
-        $collection = new GenericCollection();
-        $collection->getFirst();
-    }
-
-    /**
-     * Test getting last item when collection is empty
-     *
-     * @expectedException \UnderflowException
-     */
-    public function testGetLastFromEmpty() {
-        $collection = new GenericCollection();
-        $collection->getLast();
-    }
-
-    /**
      * Test isEmpty method on empty collection
      */
     public function testIsEmptyOnEmpty() {
@@ -253,8 +213,6 @@ class GenericCollectionTest extends \PHPUnit\Framework\TestCase {
         self::assertSame($collection->getAll(), $copy->getAll());
         self::assertSame($collection->count(), $copy->count());
         self::assertSame($collection->isEmpty(), $copy->isEmpty());
-        self::assertSame($collection->getFirst(), $copy->getFirst());
-        self::assertSame($collection->getLast(), $copy->getLast());
     }
 
     /**
@@ -271,8 +229,6 @@ class GenericCollectionTest extends \PHPUnit\Framework\TestCase {
         self::assertSame($collection->getAll(), $copy->getAll());
         self::assertSame($collection->count(), $copy->count());
         self::assertSame($collection->isEmpty(), $copy->isEmpty());
-        self::assertSame($collection->getFirst(), $copy->getFirst());
-        self::assertSame($collection->getLast(), $copy->getLast());
     }
 
     /**

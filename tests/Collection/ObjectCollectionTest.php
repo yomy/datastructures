@@ -38,7 +38,9 @@ class ObjectCollectionTest extends \PHPUnit\Framework\TestCase {
         $object = new ExampleObject1();
         $collection = new ObjectCollection(ExampleObject1::class);
         $collection->add($object);
-        self::assertSame($object, $collection->getFirst());
+        $result = $collection->getAll();
+        $first = reset($result);
+        self::assertSame($object, $first);
     }
 
     /**
@@ -137,9 +139,11 @@ class ObjectCollectionTest extends \PHPUnit\Framework\TestCase {
         } catch (\Exception $e) {
             $caught = true;
         }
+        $result = $collection->getAll();
+        $first = reset($result);
         self::assertTrue($caught);
         self::assertEquals(1, $collection->count());
-        self::assertSame($inputArray[0], $collection->getFirst());
+        self::assertSame($inputArray[0], $first);
     }
 
     /**
@@ -171,7 +175,9 @@ class ObjectCollectionTest extends \PHPUnit\Framework\TestCase {
         $object = new ExampleObject1();
         $collection = new ExampleObject1Collection();
         $collection->add($object);
-        self::assertSame($object, $collection->getFirst());
+        $result = $collection->getAll();
+        $first = reset($result);
+        self::assertSame($object, $first);
     }
 
     /**
@@ -181,7 +187,9 @@ class ObjectCollectionTest extends \PHPUnit\Framework\TestCase {
         $object = new ExampleObject1Extended();
         $collection = new ExampleObject1Collection();
         $collection->add($object);
-        self::assertSame($object, $collection->getFirst());
+        $result = $collection->getAll();
+        $first = reset($result);
+        self::assertSame($object, $first);
     }
 
     /**
