@@ -23,17 +23,18 @@ class ObjectCollection extends GenericCollection {
     /**
      * @var string
      */
-    private $class;
+    private $sourceType;
 
     /**
-     * @param string $class
+     * @param string $sourceType
      */
-    public function __construct($class) {
-        if (!class_exists($class)) {
-            throw new \InvalidArgumentException('Class does not exist');
+    public function __construct($sourceType) {
+        if (\class_exists($sourceType) || \interface_exists($sourceType)) {
+            $this->sourceType = $sourceType;
+            parent::__construct();
+        } else {
+            throw new \InvalidArgumentException('Source class or interface does not exist');
         }
-        $this->class = $class;
-        parent::__construct();
     }
 
     /**
@@ -41,7 +42,7 @@ class ObjectCollection extends GenericCollection {
      * @return bool
      */
     private function isValid($object): bool {
-        return $object instanceof $this->class;
+        return $object instanceof $this->sourceType;
     }
 
     /**
@@ -83,7 +84,7 @@ class ObjectCollection extends GenericCollection {
      * @return CollectionInterface
      */
     public function copyEmpty(): CollectionInterface {
-        return new static($this->class);
+        return new static($this->sourceType);
     }
 
 }

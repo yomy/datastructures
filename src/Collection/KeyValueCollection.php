@@ -26,31 +26,33 @@ class KeyValueCollection extends ObjectCollection {
     /**
      * @var string|null
      */
-    private $keyClass;
+    private $keySourceType;
 
     /**
      * @var string|null
      */
-    private $valueClass;
+    private $valueSourceType;
 
     /**
      * KeyValueCollection constructor.
      *
-     * @param string|null $keyClass
-     * @param string|null $valueClass
+     * @param string|null $keySourceType
+     * @param string|null $valueSourceType
      */
-    public function __construct($keyClass = null, $valueClass = null) {
-        if ($keyClass !== null) {
-            if (!class_exists($keyClass)) {
-                throw new \InvalidArgumentException('Class does not exist');
+    public function __construct($keySourceType = null, $valueSourceType = null) {
+        if ($keySourceType !== null) {
+            if (\class_exists($keySourceType) || \interface_exists($keySourceType)) {
+                $this->keySourceType = $keySourceType;
+            } else {
+                throw new \InvalidArgumentException('Source class or interface does not exist');
             }
-            $this->keyClass = $keyClass;
         }
-        if ($valueClass !== null) {
-            if (!class_exists($valueClass)) {
-                throw new \InvalidArgumentException('Class does not exist');
+        if ($valueSourceType !== null) {
+            if (\class_exists($valueSourceType) || \interface_exists($valueSourceType)) {
+                $this->valueSourceType = $valueSourceType;
+            } else {
+                throw new \InvalidArgumentException('Source class or interface does not exist');
             }
-            $this->valueClass = $valueClass;
         }
         parent::__construct(Pair::class);
     }
@@ -61,10 +63,10 @@ class KeyValueCollection extends ObjectCollection {
      */
     private function isValid(Pair $pair): bool {
         $isValid = true;
-        if ($this->keyClass !== null && !($pair->key() instanceof $this->keyClass)) {
+        if ($this->keySourceType !== null && !($pair->key() instanceof $this->keySourceType)) {
             $isValid = false;
         }
-        if ($this->valueClass !== null && !($pair->value() instanceof $this->valueClass)) {
+        if ($this->valueSourceType !== null && !($pair->value() instanceof $this->valueSourceType)) {
             $isValid = false;
         }
         return $isValid;

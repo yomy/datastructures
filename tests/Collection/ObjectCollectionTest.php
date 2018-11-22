@@ -20,11 +20,15 @@ use YomY\DataStructures\Tests\Collection\Helper\ExampleObject1;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleObject1Collection;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleObject1Extended;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleObject2;
+use YomY\DataStructures\Tests\Collection\Helper\ExampleInterface;
+use YomY\DataStructures\Tests\Collection\Helper\ExampleObjectExtendingInterface;
 
 require_once 'Helper/ExampleObject1.php';
 require_once 'Helper/ExampleObject2.php';
 require_once 'Helper/ExampleObject1Extended.php';
 require_once 'Helper/ExampleObject1Collection.php';
+require_once 'Helper/ExampleInterface.php';
+require_once 'Helper/ExampleObjectExtendingInterface.php';
 
 /**
  * @package YomY\DataStructures\Tests\Collection
@@ -37,6 +41,18 @@ class ObjectCollectionTest extends \PHPUnit\Framework\TestCase {
     public function testAdd() {
         $object = new ExampleObject1();
         $collection = new ObjectCollection(ExampleObject1::class);
+        $collection->add($object);
+        $result = $collection->getAll();
+        $first = reset($result);
+        self::assertSame($object, $first);
+    }
+
+    /**
+     * Test adding an object that extends interface
+     */
+    public function testAddInterface() {
+        $object = new ExampleObjectExtendingInterface();
+        $collection = new ObjectCollection(ExampleInterface::class);
         $collection->add($object);
         $result = $collection->getAll();
         $first = reset($result);
@@ -95,6 +111,16 @@ class ObjectCollectionTest extends \PHPUnit\Framework\TestCase {
     public function testAddFailWrongObject() {
         $collection = new ObjectCollection(ExampleObject1::class);
         $collection->add(new ExampleObject2());
+    }
+
+    /**
+     * Test adding an object of type that doesn't extend the correct interface
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testAddFailWrongObjectInterface() {
+        $collection = new ObjectCollection(ExampleInterface::class);
+        $collection->add(new ExampleObject1());
     }
 
     /**
