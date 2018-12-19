@@ -34,6 +34,11 @@ class KeyValueCollection extends ObjectCollection {
     private $valueSourceType;
 
     /**
+     * @var array
+     */
+    private $keyCache = [];
+
+    /**
      * KeyValueCollection constructor.
      *
      * @param string|null $keySourceType
@@ -89,7 +94,21 @@ class KeyValueCollection extends ObjectCollection {
      * @param mixed $value
      */
     public function put($key, $value) {
-        $this->add(new Pair($key, $value));
+        $object = new Pair($key, $value);
+        $this->validate($object);
+        $existing = $this->getPair($key);
+        $addNew = false;
+        if ($existing === null) {
+            $addNew = true;
+        } elseif ($existing->value() !== $value) {
+            parent::remove($existing);
+            $this->removeFromKeyCache($existing);
+            $addNew = true;
+        }
+        if ($addNew) {
+            parent::add($object);
+            $this->addToKeyCache($object);
+        }
     }
 
     /**
@@ -105,22 +124,90 @@ class KeyValueCollection extends ObjectCollection {
         return $result;
     }
 
+    private function isKeyCacheable($key) {
+        return (!\is_array($key) && !\is_object($key));
+    }
+
+    private function getCacheKey($key) {
+        return \gettype($key)[0] . '|' . $key;
+    }
+
     /**
-     * @param mixed $object
+     * @param Pair $object
+     */
+    private function addToKeyCache(Pair $object) {
+        if ($this->isKeyCacheable($object->key())) {
+            $this->keyCache[$this->getCacheKey($object->key())] = $object;
+        }
+    }
+
+    /**
+     * @param Pair $object
+     */
+    private function removeFromKeyCache(Pair $object) {
+        if ($this->isKeyCacheable($object->key())) {
+            unset($this->keyCache[$this->getCacheKey($object->key())]);
+        }
+    }
+
+    /**
+     * @param $key
+     * @return Pair|null
+     */
+    private function getFromKeyCache($key) {
+        $result = null;
+        if ($this->isKeyCacheable($key)) {
+            $cacheKey = $this->getCacheKey($key);
+            if (\array_key_exists($cacheKey, $this->keyCache)) {
+                $result = $this->keyCache[$cacheKey];
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @param Pair $object
      */
     public function add($object) {
-        $this->validate($object);
-        $existing = $this->getPair($object->key());
-        $addNew = false;
-        if ($existing === null) {
-            $addNew = true;
-        } elseif ($existing->value() !== $object->value()) {
-            $this->remove($existing);
-            $addNew = true;
-        }
-        if ($addNew) {
-            parent::add($object);
-        }
+        throw new \BadMethodCallException('Direct access to items is not allowed for this Collection');
+    }
+
+    /**
+     * @param array $objects
+     */
+    public function addArray(array $objects) {
+        throw new \BadMethodCallException('Direct access to items is not allowed for this Collection');
+    }
+
+    /**
+     * @param array $objects
+     * @return void
+     */
+    public function tryAddArray(array $objects) {
+        throw new \BadMethodCallException('Direct access to items is not allowed for this Collection');
+    }
+
+    /**
+     * @param Pair $objectToRemove
+     */
+    public function remove($objectToRemove) {
+        throw new \BadMethodCallException('Direct access to items is not allowed for this Collection');
+    }
+
+    /**
+     * @param mixed $object
+     * @return bool
+     */
+    public function contains($object): bool {
+        throw new \BadMethodCallException('Direct access to items is not allowed for this Collection');
+    }
+
+    /**
+     * Clear the collection
+     */
+    public function clear() {
+        parent::clear();
+        $this->keyCache = [];
     }
 
     /**
@@ -129,10 +216,14 @@ class KeyValueCollection extends ObjectCollection {
      */
     private function getPair($key) {
         $result = null;
-        foreach ($this->getAll() as $object) {
-            if ($object->key() === $key) {
-                $result = $object;
-                break;
+        if ($this->isKeyCacheable($key)) {
+            $result = $this->getFromKeyCache($key);
+        } else {
+            foreach ($this->getAll() as $object) {
+                if ($object->key() === $key) {
+                    $result = $object;
+                    break;
+                }
             }
         }
         return $result;
@@ -163,6 +254,37 @@ class KeyValueCollection extends ObjectCollection {
         foreach ($this->getAll() as $object) {
             yield $object->key() => $object->value();
         }
+    }
+
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value) {
+        $this->put($offset, $value);
+    }
+
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists($offset) {
+        return $this->containsKey($offset);
+    }
+
+    /**
+     * @param mixed $offset
+     * @return mixed|null
+     */
+    public function offsetGet($offset) {
+        return $this->get($offset);
+    }
+
+    /**
+     * @param mixed $offset
+     */
+    public function offsetUnset($offset) {
+        $this->removeByKey($offset);
     }
 
 }

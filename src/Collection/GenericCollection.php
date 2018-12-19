@@ -18,7 +18,7 @@ namespace YomY\DataStructures\Collection;
 /**
  * @package YomY\DataStructures\Collection
  */
-class GenericCollection implements \IteratorAggregate, CollectionInterface {
+class GenericCollection implements \IteratorAggregate, \ArrayAccess, CollectionInterface {
 
     /**
      * @var array
@@ -147,6 +147,41 @@ class GenericCollection implements \IteratorAggregate, CollectionInterface {
             }
         }
         return $filtered;
+    }
+
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value) {
+        if ($offset === null) {
+            $this->add($value);
+        } else {
+            throw new \BadMethodCallException('Collection is not indexed');
+        }
+    }
+
+    /**
+     * @param mixed $offset
+     * @return bool|void
+     */
+    public function offsetExists($offset) {
+        throw new \BadMethodCallException('Collection is not indexed');
+    }
+
+    /**
+     * @param mixed $offset
+     * @return mixed|void
+     */
+    public function offsetGet($offset) {
+        throw new \BadMethodCallException('Collection is not indexed');
+    }
+
+    /**
+     * @param mixed $offset
+     */
+    public function offsetUnset($offset) {
+        throw new \BadMethodCallException('Collection is not indexed');
     }
 
 }

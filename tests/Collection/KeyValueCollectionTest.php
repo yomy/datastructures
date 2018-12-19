@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace YomY\DataStructures\Tests\Collection;
 
 use YomY\DataStructures\Collection\KeyValueCollection;
+use YomY\DataStructures\Pair\Pair;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleObject1;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleObject2;
 
@@ -112,6 +113,21 @@ class KeyValueCollectionTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
+     * Test filling a pair collection
+     *
+     * @dataProvider PairProvider
+     * @param array $inputPairs
+     */
+    public function testArrayAccessPut(array $inputPairs) {
+        $collection = new KeyValueCollection();
+        foreach ($inputPairs as $inputPair) {
+            $collection[$inputPair[0]] = $inputPair[1];
+        }
+        $pairs = $this->extractPairsToArray($collection);
+        self::assertEquals($inputPairs, $pairs);
+    }
+
+    /**
      * Test getting a value from a collection
      *
      * @dataProvider PairProviderGet
@@ -122,6 +138,20 @@ class KeyValueCollectionTest extends \PHPUnit\Framework\TestCase {
     public function testGet(array $inputPairs, $key, $expectedValue) {
         $collection = $this->buildCollection($inputPairs);
         $value = $collection->get($key);
+        self::assertEquals($expectedValue, $value);
+    }
+
+    /**
+     * Test getting a value from a collection by using ArrayAccess
+     *
+     * @dataProvider PairProviderGet
+     * @param array $inputPairs
+     * @param mixed $key
+     * @param mixed $expectedValue
+     */
+    public function testArrayAccessGet(array $inputPairs, $key, $expectedValue) {
+        $collection = $this->buildCollection($inputPairs);
+        $value = $collection[$key];
         self::assertEquals($expectedValue, $value);
     }
 
@@ -151,12 +181,35 @@ class KeyValueCollectionTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
+     * Test ArrayAccess isset
+     *
+     * @dataProvider PairProvider
+     * @param array $inputPairs
+     */
+    public function testArrayAccessContainsKey(array $inputPairs) {
+        $collection = $this->buildCollection($inputPairs);
+        foreach ($inputPairs as $inputPair) {
+            self::assertTrue(isset($collection[$inputPair[0]]));
+        }
+    }
+
+    /**
      * Test removing an item by key
      */
     public function testRemove() {
         $collection = new KeyValueCollection();
         $collection->put(1, 1);
         $collection->removeByKey(1);
+        self::assertTrue($collection->isEmpty());
+    }
+
+    /**
+     * Test removing an item by key using ArrayAccess
+     */
+    public function testArrayAccessRemove() {
+        $collection = new KeyValueCollection();
+        $collection[1] = 1;
+        unset($collection[1]);
         self::assertTrue($collection->isEmpty());
     }
 
@@ -188,6 +241,17 @@ class KeyValueCollectionTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
+     * Test put using ArrayAccess, when key is restricted to specific class
+     */
+    public function testArrayAccessNamedKeyPut() {
+        $collection = new KeyValueCollection(ExampleObject1::class);
+        $object = new ExampleObject1();
+        $collection[$object] = 1;
+        $result = $collection->get($object);
+        self::assertEquals(1, $result);
+    }
+
+    /**
      * Test put fail, when wrong object is given for key
      * @expectedException \InvalidArgumentException
      */
@@ -195,6 +259,16 @@ class KeyValueCollectionTest extends \PHPUnit\Framework\TestCase {
         $collection = new KeyValueCollection(ExampleObject1::class);
         $object = new ExampleObject2();
         $collection->put($object, 1);
+    }
+
+    /**
+     * Test put fail, when wrong object is given for key
+     * @expectedException \InvalidArgumentException
+     */
+    public function testArrayAccessNamedKeyPutFailWrongType() {
+        $collection = new KeyValueCollection(ExampleObject1::class);
+        $object = new ExampleObject2();
+        $collection[$object] = 1;
     }
 
     /**
@@ -217,5 +291,52 @@ class KeyValueCollectionTest extends \PHPUnit\Framework\TestCase {
         $object = new ExampleObject2();
         $collection->put(1, $object);
     }
+
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testBadCallAdd() {
+        $collection = new KeyValueCollection();
+        $pair = new Pair(1, 2);
+        $collection->add($pair);
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testBadCallAddArray() {
+        $collection = new KeyValueCollection();
+        $pair = new Pair(1, 2);
+        $collection->addArray([$pair]);
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testBadCallTryAddArray() {
+        $collection = new KeyValueCollection();
+        $pair = new Pair(1, 2);
+        $collection->tryAddArray([$pair]);
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testBadCallRemove() {
+        $collection = new KeyValueCollection();
+        $pair = new Pair(1, 2);
+        $collection->remove($pair);
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testBadCallContains() {
+        $collection = new KeyValueCollection();
+        $pair = new Pair(1, 2);
+        $collection->contains($pair);
+    }
+
+
 
 }

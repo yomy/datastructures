@@ -88,6 +88,21 @@ class GenericCollectionTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
+     * Test creation of the collection giving one item at a time by using as array ($collection[])
+     *
+     * @dataProvider ValueProvider
+     * @param array $inputArray
+     */
+    public function testArrayAccessBuildingPerItem(array $inputArray) {
+        $collection = new GenericCollection();
+        foreach ($inputArray as $item) {
+            $collection[] = $item;
+        }
+        $items = $collection->getAll();
+        self::assertEquals($inputArray, $items);
+    }
+
+    /**
      * Test creation of the collection giving an array of items
      *
      * @dataProvider ValueProvider
@@ -369,6 +384,42 @@ class GenericCollectionTest extends \PHPUnit\Framework\TestCase {
             $count++;
         }
         self::assertEquals($count, $collection->count());
+    }
+
+    /**
+     * Test that isset() fails on indexed ArrayAccess call to collection
+     * @expectedException \BadMethodCallException
+     */
+    public function testArrayAccessFailIsset() {
+        $collection = new GenericCollection();
+        isset($collection[0]);
+    }
+
+    /**
+     * Test that empty() fails on indexed ArrayAccess call to collection
+     * @expectedException \BadMethodCallException
+     */
+    public function testArrayAccessFailEmpty() {
+        $collection = new GenericCollection();
+        empty($collection[0]);
+    }
+
+    /**
+     * Test that index access fails on indexed ArrayAccess call to collection
+     * @expectedException \BadMethodCallException
+     */
+    public function testArrayAccessFailIndexAccess() {
+        $collection = new GenericCollection();
+        $collection[0];
+    }
+
+    /**
+     * Test that unset() fails on indexed ArrayAccess call to collection
+     * @expectedException \BadMethodCallException
+     */
+    public function testArrayAccessFailUnset() {
+        $collection = new GenericCollection();
+        unset($collection[0]);
     }
 
 }
