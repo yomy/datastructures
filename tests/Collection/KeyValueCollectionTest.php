@@ -20,9 +20,6 @@ use YomY\DataStructures\Pair\Pair;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleObject1;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleObject2;
 
-require_once 'Helper/ExampleObject1.php';
-require_once 'Helper/ExampleObject2.php';
-
 /**
  * @package YomY\DataStructures\Tests\Collection
  */

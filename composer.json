@@ -22,5 +22,10 @@
             "YomY\\DataStructures\\": "src",
             "YomY\\DataStructures\\Tests\\": "tests"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "YomY\\DataStructures\\Tests\\": "tests"
+        }
     }
 }

@@ -26,17 +26,6 @@ use YomY\DataStructures\Tests\Collection\Helper\ValueObject1;
 use YomY\DataStructures\Tests\Collection\Helper\ValueObject1Collection;
 use YomY\DataStructures\Tests\Collection\Helper\ValueObject2;
 
-require_once 'Helper/ExampleObject1.php';
-require_once 'Helper/ExampleObject2.php';
-require_once 'Helper/ExampleObject1Extended.php';
-require_once 'Helper/ExampleObject1Collection.php';
-require_once 'Helper/ExampleInterface.php';
-require_once 'Helper/ExampleObjectExtendingInterface.php';
-require_once 'Helper/AbstractValueObject.php';
-require_once 'Helper/ValueObject1.php';
-require_once 'Helper/ValueObject2.php';
-require_once 'Helper/ValueObject1Collection.php';
-
 /**
  * @package YomY\DataStructures\Tests\Collection
  */

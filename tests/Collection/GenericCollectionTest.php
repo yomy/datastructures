@@ -19,8 +19,6 @@ use YomY\DataStructures\Collection\GenericCollection;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleObject1;
 use YomY\DataStructures\Tests\Collection\Helper\ExtendedGenericCollection;
 
-require_once 'Helper/ExtendedGenericCollection.php';
-require_once 'Helper/ExampleObject1.php';
 
 /**
  * @package YomY\DataStructures\Tests\Collection
