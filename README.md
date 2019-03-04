@@ -81,8 +81,13 @@ You can shallow copy the collection
 $copy = $collection->copy();
 ```
 
+You can append another collection to the collection
+```php
+$collection->append($collection2);
+//$collection now has gets items from $collection2 along it's own items
+```
+
 Collection supports custom sort of its objects.
-Note that this affects results of getFirst() and getLast() methods
 ```php
 $values = [9, 8, 7, 6, 5, 4, 3, 2, 1];
 $collection = new GenericCollection();
@@ -105,6 +110,29 @@ $filtered = $collection->filter(function($object) {
 });
 //$filtered contains [6, 7, 8, 9]
 //original collection is not affected
+```
+
+Collection can be transformed to array with a callback method.
+This allows extracting underlying data from objects or doing custom calculations
+```php
+$values = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+$collection = new GenericCollection();
+$collection->addArray($values);
+$transformed = $collection->transformToArray(function($object) {
+    //Here we decide what to return in place of each item
+    return new CustomWrapper($object);
+});
+```
+
+Collection can be transformed (appended) to another collection
+```php
+$values = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+$collection = new GenericCollection();
+$collection->addArray($values);
+$destinationCollection = new GenericCollection();
+$destinationCollection->addArray($values);
+$collection->transformToCollection($destinationCollection);
+//$destinationCollection now has appended items from $collection
 ```
 
 ## Examples of ObjectCollection usage

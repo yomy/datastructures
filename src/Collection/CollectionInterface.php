@@ -74,6 +74,12 @@ interface CollectionInterface extends \Traversable, \Countable {
     public function copyEmpty(): CollectionInterface;
 
     /**
+     * @param CollectionInterface $collection
+     * @return void
+     */
+    public function append(CollectionInterface $collection);
+
+    /**
      * @param callable $sortMethod
      * @return void
      */
@@ -84,5 +90,25 @@ interface CollectionInterface extends \Traversable, \Countable {
      * @return CollectionInterface
      */
     public function filter(callable $filterMethod): CollectionInterface;
+
+    /**
+     * @param callable $transformMethod
+     * @return array
+     */
+    public function transformToArray(callable $transformMethod): array;
+
+    /**
+     * @param CollectionInterface $collection
+     * @param callable|null $transformMethod
+     * @return void
+     */
+    public function transformToCollection(CollectionInterface $collection, callable $transformMethod = null);
+
+    /**
+     * @param string $collectionClass
+     * @param callable|null $transformMethod
+     * @return CollectionInterface
+     */
+    public function transformToCollectionClass(string $collectionClass, callable $transformMethod = null): CollectionInterface;
 
 }

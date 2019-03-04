@@ -16,9 +16,11 @@ declare(strict_types=1);
 namespace YomY\DataStructures\Tests\Collection;
 
 use YomY\DataStructures\Collection\GenericCollection;
+use YomY\DataStructures\Tests\Collection\Helper\ExampleObject1;
 use YomY\DataStructures\Tests\Collection\Helper\ExtendedGenericCollection;
 
 require_once 'Helper/ExtendedGenericCollection.php';
+require_once 'Helper/ExampleObject1.php';
 
 /**
  * @package YomY\DataStructures\Tests\Collection
@@ -384,6 +386,121 @@ class GenericCollectionTest extends \PHPUnit\Framework\TestCase {
             $count++;
         }
         self::assertEquals($count, $collection->count());
+    }
+
+    /**
+     * Test transforming to array with callback
+     */
+    public function testTransformToArray() {
+        $inputArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        $collection = new GenericCollection();
+        $collection->addArray($inputArray);
+        $transformed = $collection->transformToArray(function($object) {
+            return $object - 1;
+        });
+        self::assertCount(\count($inputArray), $transformed);
+        foreach ($inputArray as $key => $value) {
+            self::assertEquals($value - 1, $transformed[$key]);
+        }
+    }
+
+    /**
+     * Tests transforming to another collection that is not empty
+     */
+    public function testTransformToNonEmptyCollection() {
+        $inputArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        $collection = new GenericCollection();
+        $collection->addArray($inputArray);
+        $destinationCollection = new GenericCollection();
+        $destinationCollection->addArray($inputArray);
+        $collection->transformToCollection($destinationCollection);
+        self::assertCount($collection->count() * 2, $destinationCollection);
+        $expectedResult = \array_merge($inputArray, $inputArray);
+        self::assertEquals($expectedResult, $destinationCollection->getAll());
+        self::assertEquals($inputArray, $collection->getAll());
+    }
+
+    /**
+     * Tests transforming to another collection with passed callback method
+     */
+    public function testTransformToCollectionWithCallback() {
+        $inputArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        $collection = new GenericCollection();
+        $collection->addArray($inputArray);
+        $destinationCollection = new GenericCollection();
+        $destinationCollection->addArray($inputArray);
+        $collection->transformToCollection($destinationCollection, function($object) {
+            return $object - 1;
+        });
+        self::assertCount($collection->count() * 2, $destinationCollection);
+        $expectedResult = \array_merge($inputArray, array_map(function($object){
+            return $object - 1;
+        }, $inputArray));
+        self::assertEquals($expectedResult, $destinationCollection->getAll());
+        self::assertEquals($inputArray, $collection->getAll());
+    }
+
+    /**
+     * Tests transforming to another collection class without callback
+     */
+    public function testTransformToCollectionClass() {
+        $inputArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        $collection = new GenericCollection();
+        $collection->addArray($inputArray);
+        $extendedCollectionClass = ExtendedGenericCollection::class;
+        $transformed = $collection->transformToCollectionClass($extendedCollectionClass);
+        self::assertInstanceOf(ExtendedGenericCollection::class, $transformed);
+        self::assertEquals($collection->getAll(), $transformed->getAll());
+    }
+
+    /**
+     * Tests transforming to another collection class with callback
+     */
+    public function testTransformToCollectionClassWithCallback() {
+        $inputArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        $collection = new GenericCollection();
+        $collection->addArray($inputArray);
+        $extendedCollectionClass = ExtendedGenericCollection::class;
+        $transformed = $collection->transformToCollectionClass($extendedCollectionClass, function($object) {
+            return $object - 1;
+        });
+        $expectedResult = array_map(function($object){
+            return $object - 1;
+        }, $inputArray);
+        self::assertInstanceOf(ExtendedGenericCollection::class, $transformed);
+        self::assertEquals($expectedResult, $transformed->getAll());
+    }
+
+    /**
+     * Test appending to collection
+     */
+    public function testAppend() {
+        $inputArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        $collection = new GenericCollection();
+        $collection->addArray($inputArray);
+        $collection2 = new GenericCollection();
+        $collection2->addArray($inputArray);
+        $collection->append($collection2);
+        $expected = \array_merge($inputArray, $inputArray);
+        self::assertEquals($expected, $collection->getAll());
+    }
+
+    /**
+     * Tests that transform to class fails if provided with a non existing class
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailTransformToNonExistingClass() {
+        $collection = new GenericCollection();
+        $collection->transformToCollectionClass('nonExistingCollectionClass');
+    }
+
+    /**
+     * Tests that transform to class fails if provided with a class that is not a collection
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailTransformToInvalidCollectionClass() {
+        $collection = new GenericCollection();
+        $collection->transformToCollectionClass(ExampleObject1::class);
     }
 
     /**

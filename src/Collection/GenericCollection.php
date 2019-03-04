@@ -135,6 +135,14 @@ class GenericCollection implements \IteratorAggregate, \ArrayAccess, CollectionI
         return new static();
     }
 
+
+    /**
+     * @param CollectionInterface $collection
+     */
+    public function append(CollectionInterface $collection) {
+        $this->addArray($collection->getAll());
+    }
+
     /**
      * @param callable $filterMethod
      * @return CollectionInterface
@@ -147,6 +155,42 @@ class GenericCollection implements \IteratorAggregate, \ArrayAccess, CollectionI
             }
         }
         return $filtered;
+    }
+
+    /**
+     * @param callable $transformMethod
+     * @return array
+     */
+    public function transformToArray(callable $transformMethod): array {
+        return \array_map($transformMethod, $this->objects);
+    }
+
+    /**
+     * @param CollectionInterface $collection
+     * @param callable|null $transformMethod
+     */
+    public function transformToCollection(CollectionInterface $collection, callable $transformMethod = null) {
+        foreach ($this->objects as $object) {
+            $transformedObject = $transformMethod === null ? $object : $transformMethod($object);
+            $collection->add($transformedObject);
+        }
+    }
+
+    /**
+     * @param string $collectionClass
+     * @param callable|null $transformMethod
+     * @return CollectionInterface
+     */
+    public function transformToCollectionClass(string $collectionClass, callable $transformMethod = null): CollectionInterface {
+        if (!\class_exists($collectionClass)) {
+            throw new \InvalidArgumentException('Class does not exist');
+        }
+        $collection = new $collectionClass();
+        if (!$collection instanceof CollectionInterface) {
+            throw new \InvalidArgumentException('Class is not a collection');
+        }
+        $this->transformToCollection($collection, $transformMethod);
+        return $collection;
     }
 
     /**

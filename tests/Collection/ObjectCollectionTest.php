@@ -22,6 +22,9 @@ use YomY\DataStructures\Tests\Collection\Helper\ExampleObject1Extended;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleObject2;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleInterface;
 use YomY\DataStructures\Tests\Collection\Helper\ExampleObjectExtendingInterface;
+use YomY\DataStructures\Tests\Collection\Helper\ValueObject1;
+use YomY\DataStructures\Tests\Collection\Helper\ValueObject1Collection;
+use YomY\DataStructures\Tests\Collection\Helper\ValueObject2;
 
 require_once 'Helper/ExampleObject1.php';
 require_once 'Helper/ExampleObject2.php';
@@ -29,6 +32,10 @@ require_once 'Helper/ExampleObject1Extended.php';
 require_once 'Helper/ExampleObject1Collection.php';
 require_once 'Helper/ExampleInterface.php';
 require_once 'Helper/ExampleObjectExtendingInterface.php';
+require_once 'Helper/AbstractValueObject.php';
+require_once 'Helper/ValueObject1.php';
+require_once 'Helper/ValueObject2.php';
+require_once 'Helper/ValueObject1Collection.php';
 
 /**
  * @package YomY\DataStructures\Tests\Collection
@@ -227,6 +234,57 @@ class ObjectCollectionTest extends \PHPUnit\Framework\TestCase {
         $object = new ExampleObject2();
         $collection = new ExampleObject1Collection();
         $collection->add($object);
+    }
+
+    /**
+     * Test transforming with a wrong object
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailTransformToOtherCollection() {
+        $object1Collection = new ObjectCollection(ExampleObject1::class);
+        $object2Collection = new ObjectCollection(ExampleObject2::class);
+        $object1Collection->add(new ExampleObject1());
+        $object1Collection->transformToCollection($object2Collection);
+    }
+
+    /**
+     * Test transforming with a correct object
+     */
+    public function testTransformToOtherCollection() {
+        $object1Collection = new ObjectCollection(ValueObject1::class);
+        $object2Collection = new ObjectCollection(ValueObject2::class);
+        $inputObject = new ValueObject1(42);
+        $object1Collection->add($inputObject);
+        $object1Collection->transformToCollection(
+            $object2Collection,
+            function(ValueObject1 $object) {
+                return new ValueObject2($object->getValue()); //For testing purposes. Should be based on ExampleObject1
+            }
+        );
+        self::assertCount(1, $object2Collection);
+        $items = $object2Collection->getAll();
+        $firstItem = reset($items);
+        self::assertEquals($inputObject->getValue(), $firstItem->getValue());
+    }
+
+    /**
+     * Test transforming to a provided class string
+     */
+    public function testTransformToOtherCollectionClass() {
+        $sourceCollection = new ObjectCollection(ValueObject2::class);
+        $inputObject = new ValueObject2(42);
+        $sourceCollection->add($inputObject);
+        $transformedCollection = $sourceCollection->transformToCollectionClass(
+            ValueObject1Collection::class,
+            function(ValueObject2 $object) {
+                return new ValueObject1($object->getValue()); //For testing purposes. Should be based on ExampleObject1
+            }
+        );
+        self::assertCount(1, $transformedCollection);
+        $items = $sourceCollection->getAll();
+        $firstItem = reset($items);
+        self::assertEquals($inputObject->getValue(), $firstItem->getValue());
     }
 
 }
