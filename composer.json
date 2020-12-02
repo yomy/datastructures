@@ -19,8 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "YomY\\DataStructures\\": "src",
-            "YomY\\DataStructures\\Tests\\": "tests"
+            "YomY\\DataStructures\\": "src"
         }
     },
     "autoload-dev": {
