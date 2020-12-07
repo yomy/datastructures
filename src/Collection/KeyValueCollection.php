@@ -124,10 +124,18 @@ class KeyValueCollection extends ObjectCollection {
         return $result;
     }
 
+    /**
+     * @param mixed $key
+     * @return bool
+     */
     private function isKeyCacheable($key) {
         return (!\is_array($key) && !\is_object($key));
     }
 
+    /**
+     * @param mixed $key
+     * @return string
+     */
     private function getCacheKey($key) {
         return \gettype($key)[0] . '|' . $key;
     }

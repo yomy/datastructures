@@ -163,6 +163,11 @@ $collection->add($anObject);
 $collection->add(['an', 'array']);
 ```
 
+You could also add objects by using array syntax
+```php
+$collection[] = 1;
+```
+
 Objects can be added multiple times
 ```php
 $collection->add(1);
@@ -184,6 +189,11 @@ $collection->remove(1);
 Getting objects from the collection
 ```php
 $objects = $collection->getAll();
+```
+
+Note that you ***cannot*** get objects with array syntax
+```php
+$object = $collection[3]; //This will throw an exception
 ```
 
 You can also iterate trough the collection itself
@@ -349,6 +359,13 @@ A KeyValueCollection should be used via put() and get() methods.
 ```php
 $keyValueCollection->put('key', 'value');
 $value = $keyValueCollection->get('key');
+//$value will contain the string 'value'
+```
+
+You can also use the array syntax when using KeyValueCollection
+```php
+$keyValueCollection['key'] = 'value';
+$value = $keyValueCollection['key'];
 //$value will contain the string 'value'
 ```
 
